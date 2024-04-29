@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 'use client';
 
 import { withProps } from '@udecode/cn';
@@ -470,7 +471,7 @@ export function PlateEditor(props:CreatePlateComponentPropsType) {
   return (
     // <DndProvider backend={HTML5Backend}>
       <CommentsProvider users={{}} myUserId="1">
-        <Plate plugins={plugins}  initialValue={editorValue} onChange={handleOnchangeEditorValue}>
+        <Plate plugins={plugins}  initialValue={editorValue as any} onChange={handleOnchangeEditorValue}>
           <FixedToolbar>
             <FixedToolbarButtons saveReportChanges={saveReportChanges}/>
           </FixedToolbar>

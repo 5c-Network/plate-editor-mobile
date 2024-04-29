@@ -1,10 +1,13 @@
+/* eslint-disable prettier/prettier */
+//@ts-nocheck
 'use client'
+
 import { PlateEditor } from '@/components/plate-editor';
 import { getRuleName } from '@/utils/helpers';
 import { useEffect, useState } from 'react';
 
 export default function IndexPage() {
-  const urlParams = new URLSearchParams(window.location.search)
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
 
   const [study_id,setStudyId]=useState(urlParams.get('study_id'))
   const [rad_id,setRadId]=useState(urlParams.get('rad_id'))
@@ -53,7 +56,7 @@ export default function IndexPage() {
   return (
     <section>
       <div className="w-[1/1]">
-        <PlateEditor editorValue={editorValue} handleOnchangeEditorValue={handleOnchangeEditorValue} saveReportChanges={saveReportChanges}/>
+        <PlateEditor editorValue={editorValue as any} handleOnchangeEditorValue={handleOnchangeEditorValue} saveReportChanges={saveReportChanges}/>
       </div>
     </section>
   );

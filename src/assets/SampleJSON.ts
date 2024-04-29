@@ -1,6 +1,7 @@
-import { Node } from 'slate'
+import { Descendant, Node } from 'slate'
+//@ts-nocheck
 
-const ctBrainPlain: Array<Node> = [
+const ctBrainPlain: any = [
     {
       "id": "reportHeader",
       "type": "section",
