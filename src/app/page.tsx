@@ -19,7 +19,7 @@ export default function IndexPage() {
     .then((data)=> data.json())
     .then((data2)=>{
       console.log(data2)
-   const  reportToEdit=data2.reports.find((report:any)=> {return report.id=== +report_id! })
+   const  reportToEdit=data2?.reports?.find((report:any)=> {return report.id=== +report_id! })
       setEditorValue(reportToEdit?.json)
       setRule(reportToEdit?.rule)
     })

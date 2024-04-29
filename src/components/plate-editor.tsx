@@ -104,7 +104,6 @@ type CreatePlateComponentPropsType = {
 
 export function PlateEditor(props:CreatePlateComponentPropsType) {
   const {editorValue,handleOnchangeEditorValue,saveReportChanges} =props
-console.log("kldflk",{saveReportChanges})
   const disableDragAndDropEvent = useCallback((e: any) => {
     e.preventDefault()
     return false
@@ -465,7 +464,6 @@ console.log("kldflk",{saveReportChanges})
      {components :{...plateComponents,...customComponents}}
   ),[]);
   
-  console.log("editor re rendered",editorValue)
   if(editorValue?.length ==0){
     return <>THE EDITOR VALUE IS EMPTY</>
   }
