@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MARK_BOLD,
   MARK_ITALIC,
@@ -7,7 +7,7 @@ import {
   MARK_SUPERSCRIPT,
   MARK_SUBSCRIPT
 } from '@udecode/plate-basic-marks';
-import { useEditorReadOnly,useEditorRef } from '@udecode/plate-common';
+import { useEditorReadOnly,useEditorRef, usePlateStore } from '@udecode/plate-common';
 
 import { Icons } from '@/components/icons';
 
@@ -24,11 +24,11 @@ type FixedToolbarButtonsPropType = {
 
 export function FixedToolbarButtons(props:FixedToolbarButtonsPropType) {
   const {saveReportChanges} =props
-  console.log({saveReportChanges})
   const readOnly = useEditorReadOnly();
+  const [editEnabled,setEditEnabled]=useState(false)
   const editor =useEditorRef()
-
-
+  const setReadOnly = usePlateStore().set.readOnly();
+  useEffect(()=>{setReadOnly(true)},[])
 
   return (
     <div className="w-full overflow-hidden">
@@ -80,8 +80,16 @@ export function FixedToolbarButtons(props:FixedToolbarButtonsPropType) {
 
         <div className="grow" />
 
-  
-          <button className='bg-blue-500 text-white px-2 py-1 rounded m-1' onClick={()=>{saveReportChanges()}} >Save</button>
+        <ToolbarGroup noSeparator>
+         {!editEnabled ? <button 
+                          className='bg-blue-500 text-white px-2 py-1 rounded m-1' 
+                          onClick={()=>{
+                            setReadOnly(false)
+                            setEditEnabled(true)
+                          }} >Edit</button>:
+                        <button className='bg-blue-500 text-white px-2 py-1 rounded m-1' onClick={()=>{saveReportChanges();setReadOnly(true);setEditEnabled(false)}} >Save</button>}
+        </ToolbarGroup>
+         
       </div>
     </div>
   );

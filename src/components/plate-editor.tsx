@@ -77,7 +77,6 @@ import { FloatingToolbar } from '@/components/plate-ui/floating-toolbar';
 import { FloatingToolbarButtons } from '@/components/plate-ui/floating-toolbar-buttons';
 import { withPlaceholders } from '@/components/plate-ui/placeholder';
 import { withDraggables } from '@/components/plate-ui/with-draggables';
-import ctBrainPlain from '@/assets/SampleJSON';
 import styled from 'styled-components';
 import { Fragment, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { ListItem, OrderedList, ReportSubTitle, ReportSubTitleContainer, ReportTitle, Section, SectionParagraph, SectionTitle, Table, TableContainer, UnorderedList } from './editor-components';
