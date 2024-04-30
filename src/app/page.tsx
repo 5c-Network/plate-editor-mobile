@@ -5,6 +5,7 @@
 import { PlateEditor } from '@/components/plate-editor';
 import { getRuleName } from '@/utils/helpers';
 import { useEffect, useState } from 'react';
+// import '../styles/global.css'
 
 export default function IndexPage() {
   const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
@@ -15,6 +16,7 @@ export default function IndexPage() {
   const [report_id,setReportId]=useState(urlParams.get('report_id'))
 
   const [editorValue,setEditorValue]=useState<Array<Node>>([])
+  const [isLoading,setIsLoading]=useState<boolean>(false)
   const [rule,setRule]=useState<Array<Node>>([])
 
   useEffect(()=>{
@@ -33,7 +35,6 @@ export default function IndexPage() {
   }
 
   const saveReportChanges = async () => {
-    console.log("save function called")
    const data3= {
       json:editorValue,
       study_id: +study_id!,
@@ -53,6 +54,13 @@ export default function IndexPage() {
   })
   }
 
+  if(editorValue?.length ==0){
+    return (
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
+    );
+  }
   return (
     <section>
       <div className="w-[1/1]">

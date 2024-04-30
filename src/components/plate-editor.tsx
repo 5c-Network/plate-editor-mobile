@@ -464,9 +464,6 @@ export function PlateEditor(props:CreatePlateComponentPropsType) {
      {components :{...plateComponents,...customComponents}}
   ),[]);
   
-  if(editorValue?.length ==0){
-    return <>THE EDITOR VALUE IS EMPTY</>
-  }
   return (
     // <DndProvider backend={HTML5Backend}>
       <CommentsProvider users={{}} myUserId="1">
