@@ -25,10 +25,6 @@ type FixedToolbarButtonsPropType = {
 export function FixedToolbarButtons(props:FixedToolbarButtonsPropType) {
   const {saveReportChanges} =props
   const readOnly = useEditorReadOnly();
-  const [editEnabled,setEditEnabled]=useState(false)
-  const editor =useEditorRef()
-  const setReadOnly = usePlateStore().set.readOnly();
-  useEffect(()=>{setReadOnly(true)},[])
 
   return (
     <div className="w-full overflow-hidden">
@@ -81,13 +77,6 @@ export function FixedToolbarButtons(props:FixedToolbarButtonsPropType) {
         <div className="grow" />
 
         <ToolbarGroup noSeparator>
-         {!editEnabled ? <button 
-                          className='bg-blue-500 text-white px-2 py-1 rounded m-1' 
-                          onClick={()=>{
-                            setReadOnly(false)
-                            setEditEnabled(true)
-                          }} >Edit</button>:
-                        <button className='bg-blue-500 text-white px-2 py-1 rounded m-1' onClick={()=>{saveReportChanges();setReadOnly(true);setEditEnabled(false)}} >Save</button>}
         </ToolbarGroup>
          
       </div>

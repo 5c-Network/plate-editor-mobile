@@ -4,8 +4,7 @@
 
 import { PlateEditor } from '@/components/plate-editor';
 import { getRuleName } from '@/utils/helpers';
-import { useEffect, useState } from 'react';
-// import '../styles/global.css'
+import { useEffect, useRef, useState } from 'react';
 
 export default function IndexPage() {
   const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
@@ -16,56 +15,121 @@ export default function IndexPage() {
   const [report_id,setReportId]=useState(urlParams.get('report_id'))
 
   const [editorValue,setEditorValue]=useState<Array<Node>>([])
-  const [isLoading,setIsLoading]=useState<boolean>(false)
   const [rule,setRule]=useState<Array<Node>>([])
+
+  const savingStatusTimerRef=useRef<any>()
 
   useEffect(()=>{
     fetch(`https://e2e-sandbox-api.5cnetwork.com/study/${study_id}?rework_id=${rework_id}`,{method:'GET'})
-    .then((data)=> data.json())
-    .then((data2)=>{
-      console.log(data2)
-   const  reportToEdit=data2?.reports?.find((report:any)=> {return report.id=== +report_id! })
+    .then((response)=> response.json())
+    .then((data)=>{
+      console.log(data)
+   const  reportToEdit=data?.reports?.find((report:any)=> {return report.id=== +report_id! })
       setEditorValue(reportToEdit?.json)
       setRule(reportToEdit?.rule)
     })
   },[])
 
-  const handleOnchangeEditorValue =(value:any) =>{
-    setEditorValue(value)
+
+
+  function debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
   }
 
-  const saveReportChanges = async () => {
-   const data3= {
-      json:editorValue,
+  const updateSavingStatus = async(status:string) =>{
+    setSavingStatus(status)
+  }
+
+  const saveReportChanges = async (report_json) => {
+    setEditorValue(report_json)
+    await updateSavingStatus('saving')
+     const dataToUpdate= {
+      json:report_json,
       study_id: +study_id!,
       rad_id:+rad_id!,
       name:getRuleName(rule),
       rule,
-      id: +report_id!,
-      // rework_id: +rework_id!,
-      // lang_code: 'en' 
+      id: +report_id!, 
     }
     await fetch('https://e2e-sandbox-api.5cnetwork.com/report',{
       method:'POST',
       headers: {
-      'Content-Type': 'application/json' // Set content type to JSON
+      'Content-Type': 'application/json' 
       },
-      body:JSON.stringify(data3)
+      body:JSON.stringify(dataToUpdate)
   })
+  await updateSavingStatus('saved')
+  if(savingStatusTimerRef.current){
+    clearTimeout(savingStatusTimerRef.current)
+  }
+  savingStatusTimerRef.current = setTimeout(() => {
+    setSavingStatus('');
+  }, 3000);
   }
 
+  const saveDebounce = debounce(saveReportChanges,1000)
+const handleOnchangeEditorValue =(value:any) =>{
+  saveDebounce(value)
+}
+
+const [savingStatus, setSavingStatus] = useState('');
+
+const handleSave = () => {
+  setSavingStatus('saving');
+  setTimeout(() => {
+    setSavingStatus('saved');
+    setTimeout(() => {
+      setSavingStatus('');
+    }, 3000);
+  }, 2000);
+};
+
+
+
+useEffect(()=>{ handleSave()},[])
   if(editorValue?.length ==0){
     return (
-      <div className="loader-container">
-        <div className="loader"></div>
-      </div>
+      <div className="fixed bottom-1/2 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full flex items-center">
+          <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+          <span className="mr-2">Loading...</span>
+        </div>
     );
   }
+
+
   return (
     <section>
       <div className="w-[1/1]">
         <PlateEditor editorValue={editorValue as any} handleOnchangeEditorValue={handleOnchangeEditorValue} saveReportChanges={saveReportChanges}/>
       </div>
+      {/* ------saving ui ----------- */}
+      <>
+      {savingStatus === 'saving' && (
+        <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full flex items-center">
+          <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+          <span className="mr-2">Saving...</span>
+        </div>
+      )}
+      {savingStatus === 'saved' && (
+        <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full flex items-center">
+          <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fillRule="evenodd"
+              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <span>Saved</span>
+        </div>
+      )}
+    </>
+
     </section>
   );
 }
