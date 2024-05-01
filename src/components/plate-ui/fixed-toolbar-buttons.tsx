@@ -75,9 +75,6 @@ export function FixedToolbarButtons(props:FixedToolbarButtonsPropType) {
         )}
 
         <div className="grow" />
-
-        <ToolbarGroup noSeparator>
-        </ToolbarGroup>
          
       </div>
     </div>
