@@ -5,8 +5,8 @@ A minimal template for building rich-text editors with [Plate](https://platejs.o
 ## Usage
 
 ```bash
-pnpm install
-pnpm dev
+yarn install
+yarn dev
 ```
 
 ## Features
