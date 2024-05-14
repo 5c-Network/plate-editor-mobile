@@ -20,7 +20,7 @@ export default function IndexPage() {
   const savingStatusTimerRef=useRef<any>()
 
   useEffect(()=>{
-    fetch(`https://e2e-sandbox-api.5cnetwork.com/study/${study_id}?rework_id=${rework_id}`,{method:'GET'})
+    fetch(`https://e2e-staging-api.5cnetwork.com/study/${study_id}?rework_id=${rework_id}`,{method:'GET'})
     .then((response)=> response.json())
     .then((data)=>{
       console.log(data)
@@ -57,7 +57,7 @@ export default function IndexPage() {
       rule,
       id: +report_id!, 
     }
-    await fetch('https://e2e-sandbox-api.5cnetwork.com/report',{
+    await fetch('https://e2e-staging-api.5cnetwork.com/report',{
       method:'POST',
       headers: {
       'Content-Type': 'application/json' 
