@@ -140,3 +140,20 @@ export const Table = styled.table`
     word-break: initial;
   }
 `
+
+export const KeyImageContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 0.5rem;
+`
+
+export const KeyImageCaption = styled(Text)`
+  line-height: 1.25rem;
+  margin-top: 0.5rem;
+  min-width: 12rem;
+  max-width: 15rem;
+  text-align: center;
+  display: inline;
+`

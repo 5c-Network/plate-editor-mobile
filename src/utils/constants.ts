@@ -1,4 +1,8 @@
-  
+export enum TextFonts {
+  ProductSans = 'ProductSans',
+  Roboto = 'Roboto',
+}
+
   export enum TextSizes {
     xs = '0.5rem',
     s = '0.75rem',
