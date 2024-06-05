@@ -111,7 +111,6 @@ export const updateReworkReportEditTracker = async (data: any) => {
       url: `${NOCO_DB_BASE_URL+endpoint}/find-one?where=(rad_id,eq,${rad_id})~and(rework_id,eq,${rework_id})`,
       headers: NOCO_DB_HEADER,
     });
-    alert(JSON.stringify(response?.data))
     if (Object.keys(response?.data)?.length) {
       const updateData: any = {};
       if (mod_study) {
