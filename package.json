@@ -60,6 +60,7 @@
     "@udecode/plate-table": "^31.4.1",
     "@udecode/plate-toggle": "^31.4.0",
     "@udecode/plate-trailing-block": "^31.0.0",
+    "axios": "1.7.2",
     "class-variance-authority": "0.7.0",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",

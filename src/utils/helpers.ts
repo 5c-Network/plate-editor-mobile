@@ -1,4 +1,6 @@
 import FontFaceObserver from 'fontfaceobserver';
+import { NOCO_DB_BASE_URL, NOCO_DB_HEADER } from './constants';
+import axios from 'axios';
 
 export const robotoFontFaceObserverHelper = () => {
   const robotoN = new FontFaceObserver('Roboto', {
@@ -33,9 +35,9 @@ export const robotoFontFaceObserverHelper = () => {
 };
 
 export const getRuleName = (ruleObj: any, separator = ' ') => {
-  let ruleName = ruleObj['list']?.join(separator);
+  let ruleName = ruleObj?.['list']?.join(separator);
 
-  if (ruleObj.hasOwnProperty('children')) {
+  if (ruleObj?.hasOwnProperty('children')) {
     ruleName += separator;
     ruleObj['children'].forEach((childObj: any, index: number) => {
       ruleName += childObj['list'].join(' ');
@@ -45,7 +47,7 @@ export const getRuleName = (ruleObj: any, separator = ' ') => {
     });
   }
 
-  if (ruleObj.hasOwnProperty('additional') && ruleObj['additional'].length) {
+  if (ruleObj?.hasOwnProperty('additional') && ruleObj['additional'].length) {
     ruleName += ' with ';
     ruleObj['additional'].forEach((additionalRule: any, index: number) => {
       ruleName += additionalRule['list']
@@ -98,3 +100,42 @@ export const getRuleName = (ruleObj: any, separator = ' ') => {
 
   return ruleName;
 };
+
+export const updateReworkReportEditTracker = async (data: any) => {
+  const endpoint = '/api/v1/db/data/noco/pnh8gwhfqwr90rl/mhn4f6z228fb3f9/views/vwt826hzesnoxroh'
+  const { rework_id, rad_id, report_id, mod_study } = data;
+  
+  try {
+    const response = await axios.request({
+      method: 'GET',
+      url: `${NOCO_DB_BASE_URL+endpoint}/find-one?where=(rad_id,eq,${rad_id})~and(rework_id,eq,${rework_id})`,
+      headers: NOCO_DB_HEADER,
+    });
+    if (Object.keys(response?.data)?.length) {
+      const updateData: any = {};
+      if (mod_study) {
+        updateData['mod_study'] = JSON.stringify({...JSON.parse(response.data?.mod_study), [report_id]: mod_study});
+      }
+
+      await axios.request({
+        method: 'PATCH',
+        url: `${NOCO_DB_BASE_URL+'/api/v1/db/data/v1/pnh8gwhfqwr90rl/MobileReworkReport/'+response.data?.Id}`,
+        headers: NOCO_DB_HEADER,
+        data: updateData
+      });
+    } else {
+      await axios.request({
+        method: 'POST',
+        url: `${NOCO_DB_BASE_URL+endpoint}`,
+        headers: NOCO_DB_HEADER,
+        data: {
+          rad_id,
+          rework_id,
+          [mod_study]: {[report_id]: mod_study}
+        },
+      });
+    }
+  } catch (error) {
+    throw new Error('Update or insert operation failed.');
+  }
+}

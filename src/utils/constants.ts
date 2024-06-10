@@ -92,3 +92,10 @@ export enum TextColors {
   skyBlueLight = '#eff8ff',
   softBlue = '#afd5ee',
 }
+
+export const NOCO_DB_BASE_URL = 'https://answermagic.5cn.co.in';
+
+export const NOCO_DB_HEADER = {
+  'Content-Type': 'application/json',
+  'xc-token': '0gJVdPdIPKnfzxNw7neVsAzilf0NG6HwRTaWqThM',
+};

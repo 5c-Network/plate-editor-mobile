@@ -5,6 +5,7 @@
 import { PlateEditor } from '@/components/plate-editor';
 import { getRuleName } from '@/utils/helpers';
 import { useEffect, useRef, useState } from 'react';
+import { updateReworkReportEditTracker } from '../utils/helpers';
 
 export default function IndexPage() {
   const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
@@ -13,9 +14,9 @@ export default function IndexPage() {
   const [rad_id,setRadId]=useState(urlParams.get('rad_id'))
   const [rework_id,setReworkId]=useState(urlParams.get('rework_id'))
   const [report_id,setReportId]=useState(urlParams.get('report_id'))
-
   const [editorValue,setEditorValue]=useState<Array<Node>>([])
   const [rule,setRule]=useState<Array<Node>>([])
+  const [isReportEdit, setIsReportEdit] = useState<boolean>(false);
 
   const savingStatusTimerRef=useRef<any>()
 
@@ -23,8 +24,7 @@ export default function IndexPage() {
     fetch(`https://e2e-staging-api.5cnetwork.com/study/${study_id}?rework_id=${rework_id}`,{method:'GET'})
     .then((response)=> response.json())
     .then((data)=>{
-      console.log(data)
-   const  reportToEdit=data?.reports?.find((report:any)=> {return report.id=== +report_id! })
+      const reportToEdit=data?.reports?.find((report:any)=> {return report.id=== +report_id! })
       setEditorValue(reportToEdit?.json)
       setRule(reportToEdit?.rule)
     })
@@ -64,6 +64,18 @@ export default function IndexPage() {
       },
       body:JSON.stringify(dataToUpdate)
   })
+  try {
+    !isReportEdit && updateReworkReportEditTracker({
+      rad_id: +rad_id,
+      rework_id: +rework_id,
+      report_id: +report_id,
+      mod_study: getRuleName(rule)
+    })
+    setIsReportEdit(true)
+  } catch (error) {
+    console.log(error)
+  }
+
   await updateSavingStatus('saved')
   if(savingStatusTimerRef.current){
     clearTimeout(savingStatusTimerRef.current)
